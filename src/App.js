@@ -1,117 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import ToDoApp from "./screens/ToDoApp";
+import DragAndDropPage from "./screens/DragAndDropPage";
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  const [taskInput, setTaskInput] = useState("");
-
-  const addTask = () => {
-    if (taskInput.trim()) {
-      setTasks([...tasks, { id: Date.now(), text: taskInput, completed: false }]);
-      setTaskInput("");
-    }
-  };
-
-  const toggleTaskCompletion = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
   return (
-    <div style={styles.container}>
-      <h1>ToDo List</h1>
-      <div style={styles.inputContainer}>
-        <input
-          style={styles.input}
-          type="text"
-          value={taskInput}
-          onChange={(e) => setTaskInput(e.target.value)}
-          placeholder="Enter a new task..."
-        />
-        <button style={styles.button} onClick={addTask}>
-          Add
-        </button>
+    <Router>
+      <div style={styles.nav}>
+        <Link to="/" style={styles.link}>
+          ToDo List
+        </Link>
+        <Link to="/drag-and-drop" style={styles.link}>
+          Drag and Drop
+        </Link>
       </div>
-      <ul style={styles.list}>
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            style={{
-              ...styles.listItem,
-              textDecoration: task.completed ? "line-through" : "none",
-            }}
-          >
-            <span
-              onClick={() => toggleTaskCompletion(task.id)}
-              style={styles.taskText}
-            >
-              {task.text}
-            </span>
-            <button
-              style={styles.deleteButton}
-              onClick={() => deleteTask(task.id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <Routes>
+        <Route path="/" element={<ToDoApp />} />
+        <Route path="/drag-and-drop" element={<DragAndDropPage />} />
+      </Routes>
+    </Router>
   );
 }
 
 const styles = {
-  container: {
-    margin: "0 auto",
-    maxWidth: "400px",
-    textAlign: "center",
-    fontFamily: "Arial, sans-serif",
-  },
-  inputContainer: {
+  nav: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "20px",
-  },
-  input: {
-    width: "70%",
     padding: "10px",
-    fontSize: "16px",
+    backgroundColor: "#007bff",
+    color: "#fff",
   },
-  button: {
-    padding: "10px 15px",
-    marginLeft: "10px",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-  list: {
-    listStyleType: "none",
-    padding: 0,
-  },
-  listItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px",
-    borderBottom: "1px solid #ddd",
-  },
-  taskText: {
-    cursor: "pointer",
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    padding: "5px 10px",
+  link: {
+    margin: "0 15px",
+    textDecoration: "none",
+    color: "#fff",
+    fontWeight: "bold",
   },
 };
 
 export default App;
-
